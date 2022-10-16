@@ -1,0 +1,27 @@
+{
+  "overrides": [
+    {
+      "files": ".prettierrc",
+      "options": {
+        "parser": "json"
+      }
+    }
+  ],
+  "printWidth": 100,
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "useTabs": false,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": false,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "requirePragma": false,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "vueIndentScriptAndStyle": false,
+  "endOfLine": "auto",
+  "embeddedLanguageFormatting": "auto"
+}

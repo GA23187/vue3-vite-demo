@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRoute } from 'vue-router'
 
-const route = useRoute();
-console.log(route.meta);
+const route = useRoute()
+console.log(route.meta)
 </script>
 <template>
   <div class="layout-tabbar">
@@ -13,6 +13,7 @@ console.log(route.meta);
     <router-link to="/static">测试静态资源</router-link>
     <router-link to="/pinia">测试pinia</router-link>
     <router-link to="/mockAxios">测试mock-axios</router-link>
+    <router-link to="/zTreeDemo">测试zTree</router-link>
   </div>
   <div class="layout-content">
     <keep-alive v-if="route.meta.keepAlive">
