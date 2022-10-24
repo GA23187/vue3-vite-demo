@@ -1,16 +1,16 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
 export const useAppStore = defineStore({
-  id: "app",
+  id: 'app',
   state: () => {
     return {
-      config: "app",
-    };
+      config: 'app'
+    }
   },
   actions: {
     setData(data: any) {
-      console.log(data, this.$state);
-      this.config = data;
-    },
-  },
-});
+      console.log(data, this.$state)
+      this.config = data
+    }
+  }
+})
