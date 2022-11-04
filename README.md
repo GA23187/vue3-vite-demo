@@ -1086,6 +1086,10 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
 
 ## axios 配置
 
+
+
+
+
 ## zTree 使用
 
 > 需求场景：需要支持树节点的前端搜索，同时搜出来的节点数可能会比较多，使用 element-plus 的 tree 组件会出现明显的卡顿问题。
@@ -1144,6 +1148,65 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
 #### 增删改查
 
 - 搜索高亮
+
+## vite插件
+
+### 压缩文件工具
+
+#### vite-plugin-zip-file(vite3)
+
+https://github.com/Ssis53/vite-plugin-zip
+
+```
+npm install vite-plugin-zip-file --save-dev
+```
+
+注意该插件peerDependencies的 vite版本是^3.0.7,目前项目vite版本是2.9.15，在nodev16版本下直接安装会报错
+
+```
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR!
+npm ERR! While resolving: ga23ui@0.0.0
+npm ERR! Found: vite@2.9.15
+npm ERR! node_modules/vite
+npm ERR!   dev vite@"^2.8.0" from the root project
+npm ERR!
+npm ERR! Could not resolve dependency:
+npm ERR! peer vite@"^3.0.7" from vite-plugin-zip-file@1.0.2
+npm ERR! node_modules/vite-plugin-zip-file
+npm ERR!   dev vite-plugin-zip-file@"*" from the root project
+npm ERR!
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force, or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+```
+
+安装提示可以通过在后面加上`--legacy-peer-deps`解决，但是不太推荐，目前项目使用vite2暂不升级所以没有使用这个插件。
+
+#### vite-plugin-zip-pack
+
+https://github.com/7th-Cyborg/vite-plugin-zip-pack
+
+```
+npm i -D vite-plugin-zip-pack
+```
+
+使用
+
+```
+import zipPack from 'vite-plugin-zip-pack'
+
+ plugins: [
+      zipPack({
+        inDir: './dist',
+        outDir: './',
+        outFileName: 'dist.zip'
+      })
+ ]
+```
+
+
 
 ## pnpm
 

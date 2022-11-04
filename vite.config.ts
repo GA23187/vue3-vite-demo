@@ -5,6 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 // path 模块是 node.js 内置的 不支持ts 需要安装@types/node
 import { resolve } from 'path'
 import { viteMockServe } from 'vite-plugin-mock'
+import zipPack from 'vite-plugin-zip-pack'
 
 /**
  * 根据环境变量设置输出目录
@@ -34,6 +35,11 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
           import { setupProdMockServer } from '../mock/_createProductionServer';
           setupProdMockServer();
         `
+      }),
+      zipPack({
+        inDir: './dist',
+        outDir: './',
+        outFileName: 'dist.zip'
       })
     ],
     resolve: {
