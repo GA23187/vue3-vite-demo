@@ -16,8 +16,8 @@ export const useUserStore = defineStore({
   },
   actions: {
     updateState(data: any) {
-      this.$state = data
-      console.log(this.$state, 'this.$state')
+      // this.$state = data
+      // console.log(this.$state, 'this.$state')
       this.updateAppConfig()
     },
     updateAppConfig() {
@@ -30,7 +30,7 @@ export const useUserStore = defineStore({
   persist: {
     key: 'user',
     storage: localStorage,
-    paths: ['name'],
-    overwrite: true
+    paths: ['name']
+    // overwrite: true
   }
 })

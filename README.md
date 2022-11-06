@@ -1149,6 +1149,151 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
 
 - 搜索高亮
 
+
+
+## echarts使用
+
+### 1.安装
+
+```
+npm install echarts --save
+```
+
+### 2.引入
+
+[按需引入](https://echarts.apache.org/handbook/zh/basics/import/#%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-echarts-%E5%9B%BE%E8%A1%A8%E5%92%8C%E7%BB%84%E4%BB%B6)
+
+```
+// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+import * as echarts from 'echarts/core';
+// 引入柱状图图表，图表后缀都为 Chart
+import { BarChart } from 'echarts/charts';
+// 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent
+} from 'echarts/components';
+// 标签自动布局，全局过渡动画等特性
+import { LabelLayout, UniversalTransition } from 'echarts/features';
+// 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
+import { CanvasRenderer } from 'echarts/renderers';
+
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  BarChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer
+]);
+
+// 接下来的使用就跟之前一样，初始化图表，设置配置项
+var myChart = echarts.init(document.getElementById('main'));
+myChart.setOption({
+  // ...
+});
+```
+
+[在typescript中按需引入](https://echarts.apache.org/handbook/zh/basics/import/#在-typescript-中按需引入)
+
+```
+import * as echarts from 'echarts/core';
+import {
+  BarChart,
+  // 系列类型的定义后缀都为 SeriesOption
+  BarSeriesOption,
+  LineChart,
+  LineSeriesOption
+} from 'echarts/charts';
+import {
+  TitleComponent,
+  // 组件类型的定义后缀都为 ComponentOption
+  TitleComponentOption,
+  TooltipComponent,
+  TooltipComponentOption,
+  GridComponent,
+  GridComponentOption,
+  // 数据集组件
+  DatasetComponent,
+  DatasetComponentOption,
+  // 内置数据转换器组件 (filter, sort)
+  TransformComponent
+} from 'echarts/components';
+import { LabelLayout, UniversalTransition } from 'echarts/features';
+import { CanvasRenderer } from 'echarts/renderers';
+
+// 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
+type ECOption = echarts.ComposeOption<
+  | BarSeriesOption
+  | LineSeriesOption
+  | TitleComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | DatasetComponentOption
+>;
+
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  BarChart,
+  LineChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer
+]);
+
+const option: ECOption = {
+  // ...
+};
+```
+
+### 3.使用
+
+
+
+### 世界地图实现
+
+> 核心地图数据的获取
+>
+> 1.在网上找现成的
+>
+> 2.自定义编辑geojson.io](https://link.juejin.cn/?target=http%3A%2F%2Fgeojson.io%2F)
+
+没有找到那种全国地区 并且还有城市的
+
+#### 地图下钻
+
+[vue + echarts实现中国地图省份下钻联动](https://juejin.cn/post/7082686310166560799)
+
+[学会这招！地图随便下钻](https://juejin.cn/post/7154391888433250312)
+
+https://juejin.cn/post/7085536087078076430
+
+https://juejin.cn/post/7073404324587503630
+
+https://juejin.cn/post/7029132275736395784
+
+https://juejin.cn/post/6994606112775340039
+
+
+
+#### 地图区域高亮
+
+- Vue环境下用ECharts绘制中国地图，并实现拖动、缩放与各省份自动轮播高亮显示https://majinjian.blog.csdn.net/article/details/121823421
+-  echarts 绘制中国地图后加气泡以及亮点https://github.com/ecomfe/echarts-for-weixin/issues/675
+- echarts地图城市散点图https://blog.csdn.net/weixin_41187842/article/details/81261072
+
 ## vite插件
 
 ### 压缩文件工具
@@ -1226,3 +1371,15 @@ import zipPack from 'vite-plugin-zip-pack'
   hint: If you don't want pnpm to fail on peer dependency issues, add "strict-peer-dependencies=false" to an .npmrc fi
   le at the root of your project.
   ```
+
+- 重新npm i后，其中`pinia-plugin-persistedstate`插件安装了最新版本，其中1.4.0版本移除了`overwrite `选项，导致ts提示错误。
+
+  ​    https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/CHANGELOG.md#140-2022-03-06
+
+## 一些问题
+
+```
+https://github.com/vitejs/vite/discussions/7574
+使用vue-devtools 并调用了const { appContext } = getCurrentInstance()
+```
+

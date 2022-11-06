@@ -58,6 +58,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'zTreeDemo',
         component: () => import('@/test/zTreeDemo/index.vue'),
         meta: { title: '测试zTreeD', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/echarts',
+        name: 'echarts',
+        component: () => import('@/test/testEcharts/index.vue'),
+        meta: { title: '测试echarts', keepAlive: false, showTab: true }
       }
     ]
   }

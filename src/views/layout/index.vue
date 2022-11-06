@@ -14,6 +14,7 @@ console.log(route.meta)
     <router-link to="/pinia">测试pinia</router-link>
     <router-link to="/mockAxios">测试mock-axios</router-link>
     <router-link to="/zTreeDemo">测试zTree</router-link>
+    <router-link to="/echarts">测试echarts</router-link>
   </div>
   <div class="layout-content">
     <keep-alive v-if="route.meta.keepAlive">
@@ -31,5 +32,8 @@ console.log(route.meta)
     color: #000;
     background: rgb(0, 225, 255);
   }
+}
+.layout-content {
+  height: calc(100% - 46px);
 }
 </style>
