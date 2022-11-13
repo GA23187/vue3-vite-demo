@@ -1043,6 +1043,181 @@ pnpm i -D husky lint-staged
     "lint:lint-staged": "lint-staged",
 ```
 
+
+
+## <span id="husky">✅ 引入element-plus</span>
+
+### 1.安装
+
+```
+npm install element-plus
+```
+
+### 2.按需引入(自动导入)
+
+```
+npm install -D unplugin-vue-components unplugin-auto-import
+```
+
+[unplugin-auto-import](https://github.com/antfu/unplugin-auto-import)负责按需引入Vue/Vue Router等官方Api的插件,不需要手动编写`import {xxx} from vue`这样的代码。
+
+[unplugin-vue-components](https://github.com/antfu/unplugin-vue-components#readme)负责vue组件自动引入，就不需要注册引入这写操作了。
+
+### 3.修改vite.config.ts文件
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+
+export default defineConfig({
+  // ...
+  plugins: [
+    // ...
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+      // 顺带配置下vue vue-router pinia的api自动引入
+      imports: ['vue', 'vue-router', 'pinia'],
+      // 生成下eslint globels配置文件
+      eslintrc: {
+          enabled: true,
+          filepath: './.eslintrc-auto-import.json',
+          globalsPropValue: true
+        }
+      
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
+})
+```
+
+###  4.修改tsconfig.json与eslintrc.js文件
+
+让ts认识一下
+
+```tsconfig.json
+"include": [
+    //...
+    "auto-imports.d.ts",
+    "components.d.ts"
+  ],
+```
+
+让eslint认识一下
+
+```eslintrc.js
+/* eslint-env node */
+require('@rushstack/eslint-patch/modern-module-resolution')
+const { globals } = require('./.eslintrc-auto-import.json')
+
+module.exports = {
+  // ...
+  globals
+}
+```
+
+### 5.全局配置(按需引入下)
+
+```
+<script setup lang="ts">
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+console.log(import.meta.env)
+const elementConfig = reactive({
+  size: 'small',
+  zIndex: 3000,
+  locale: zhCn
+})
+</script>
+
+<template>
+  <el-config-provider
+    :size="elementConfig.size"
+    :z-index="elementConfig.zIndex"
+    :locale="elementConfig.locale"
+  >
+    <router-view />
+  </el-config-provider>
+</template>
+
+```
+
+### 7.Icon 图标自动引入
+
+1、安装 这一步也可以不进行，因为element-plus中的依赖有它
+
+```
+npm install @element-plus/icons-vue
+```
+
+2、使用 [unplugin-icons](https://github.com/antfu/unplugin-icons) 和 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 从 iconify 中自动导入任何图标集
+
+```
+npm i -D unplugin-icons
+```
+
+3、修改vite.config.ts文件
+
+```typescript
+// ...
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+// icon图标自动引入
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+
+export default ({ mode, command }: ConfigEnv): UserConfigExport => {
+  const isBuild = command === 'build'
+  return defineConfig({
+    plugins: [
+      // ...
+      AutoImport({
+        resolvers: [
+          ...
+          // 自动导入图标组件
+          IconsResolver({
+            prefix: 'Icon'
+          })
+        ],
+      ...
+      }),
+      Components({
+        resolvers: [
+          ...
+          // 自动注册图标组件
+          IconsResolver({
+            // prefix: 'Icon', // default: 'I'
+            enabledCollections: ['ep']
+          })
+        ]
+      }),
+      // 自动安装@iconify-json/ep
+      Icons({
+        autoInstall: true
+      })
+    ],
+}
+```
+
+4、使用时无需import，在[官方图标集合](https://element-plus.gitee.io/zh-CN/component/icon.html#图标集合)中标识的图标名前追加前缀**IEp**即可使用
+
+```
+<IEpEdit/>
+```
+
+5、修改tsconfig.json文件  解决components.d.ts中自动添加的IEpEdit: typeof import('~icons/ep/edit')['default']提示找不到类型定义问题
+
+```
+   compilerOptions:{
+    "types": ["unplugin-icons/types/vue"]
+   } 
+```
+
+
+
 ## 打包配置
 
 ```ts

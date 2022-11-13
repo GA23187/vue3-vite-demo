@@ -1,12 +1,22 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+
 console.log(import.meta.env)
+const elementConfig = reactive({
+  size: 'default',
+  zIndex: 3000,
+  locale: zhCn
+})
 </script>
 
 <template>
-  <router-view />
+  <el-config-provider
+    :size="elementConfig.size"
+    :z-index="elementConfig.zIndex"
+    :locale="elementConfig.locale"
+  >
+    <router-view />
+  </el-config-provider>
 </template>
 
 <style>

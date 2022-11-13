@@ -15,8 +15,17 @@
     "paths": {
       "@/*": ["src/*"],
       "#/*": ["types/*"]
-    }
+    },
+    "types": ["unplugin-icons/types/vue"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","mock/**/*.ts",],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "mock/**/*.ts",
+    "auto-imports.d.ts",
+    "components.d.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

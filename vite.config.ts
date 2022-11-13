@@ -6,6 +6,16 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { resolve } from 'path'
 import { viteMockServe } from 'vite-plugin-mock'
 import zipPack from 'vite-plugin-zip-pack'
+// 自动导入
+import AutoImport from 'unplugin-auto-import/vite'
+// 组件按需引入
+import Components from 'unplugin-vue-components/vite'
+// element-plus解析器
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// icon图标自动引入
+import Icons from 'unplugin-icons/vite'
+// icon图标解析器
+import IconsResolver from 'unplugin-icons/resolver'
 
 /**
  * 根据环境变量设置输出目录
@@ -40,6 +50,39 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
         inDir: './dist',
         outDir: './',
         outFileName: 'dist.zip'
+      }),
+      AutoImport({
+        resolvers: [
+          // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+          ElementPlusResolver()
+          // 自动导入图标组件
+          // IconsResolver({
+          //   prefix: 'Icon'
+          // })
+        ],
+        // 自动导入 Vue vue-router pinia相关函数，如：ref, reactive, toRef 等
+        imports: ['vue', 'vue-router', 'pinia'],
+        // 生成上面自动导入的api对应的eslint globals文件
+        eslintrc: {
+          enabled: true,
+          filepath: './.eslintrc-auto-import.json',
+          globalsPropValue: true
+        }
+      }),
+      Components({
+        resolvers: [
+          // 自动导入 Element Plus 组件
+          ElementPlusResolver(),
+          // 自动注册图标组件
+          IconsResolver({
+            // prefix: 'Icon', // default: 'I'
+            enabledCollections: ['ep']
+          })
+        ]
+      }),
+      // 自动安装@iconify-json/ep
+      Icons({
+        autoInstall: true
       })
     ],
     resolve: {

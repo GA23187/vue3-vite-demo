@@ -1,5 +1,6 @@
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
+const { globals } = require('./.eslintrc-auto-import.json')
 
 module.exports = {
   root: true,
@@ -21,5 +22,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'vue/multi-word-component-names': 'off'
-  }
+  },
+  globals
 }
