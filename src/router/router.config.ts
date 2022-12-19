@@ -64,6 +64,21 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'echarts',
         component: () => import('@/test/testEcharts/index.vue'),
         meta: { title: '测试echarts', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/editor',
+        name: 'editor',
+        component: () => import('@/views/layout/routerView.vue'),
+        meta: { title: '测试Editor', keepAlive: false, showTab: true },
+        redirect: '/editor/quill',
+        children: [
+          {
+            path: '/editor/quill',
+            name: 'quillEditor',
+            component: () => import('@/test/testEditor/quill/index.vue'),
+            meta: { title: '测试quillEditor', keepAlive: false, showTab: true }
+          }
+        ]
       }
     ]
   }

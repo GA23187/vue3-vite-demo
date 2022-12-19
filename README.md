@@ -1469,6 +1469,57 @@ https://juejin.cn/post/6994606112775340039
 -  echarts 绘制中国地图后加气泡以及亮点https://github.com/ecomfe/echarts-for-weixin/issues/675
 - echarts地图城市散点图https://blog.csdn.net/weixin_41187842/article/details/81261072
 
+
+
+## 富文本编辑器
+
+> 选型
+>
+> 1.[vue-quill](https://vueup.github.io/vue-quill/) vue3版本的
+>
+> 2.wangeditor
+
+### 1.安装
+
+ ```
+npm install @vueup/vue-quill@latest --save
+ ```
+
+### 2.使用
+
+- 全局组件方式
+
+  ```
+  import { createApp } from 'vue'
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css';
+  
+  const app = createApp()
+  app.component('QuillEditor', QuillEditor)
+  ```
+
+- 单文件组件方式
+
+  ```
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css';
+  
+  export default {
+    components: {
+      QuillEditor
+    }
+  }
+  ```
+
+- 目前使用发现提供的`v-model`不好使，无法赋值，暂时使用其提供的实例方法来赋值与取值
+
+  ```
+  editorRef.value.setContents(delta)
+  editorRef.value.getContents()
+  ```
+
+  
+
 ## vite插件
 
 ### 压缩文件工具

@@ -14,6 +14,7 @@ console.log(route.meta)
     <router-link to="/mockAxios">测试mock-axios</router-link>
     <router-link to="/zTreeDemo">测试zTree</router-link>
     <router-link to="/echarts">测试echarts</router-link>
+    <router-link to="/editor">测试editor</router-link>
   </div>
   <div class="layout-content">
     <keep-alive v-if="route.meta.keepAlive">
