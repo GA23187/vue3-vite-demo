@@ -79,6 +79,12 @@ export const routes: Array<RouteRecordRaw> = [
             meta: { title: '测试quillEditor', keepAlive: false, showTab: true }
           }
         ]
+      },
+      {
+        path: '/execl',
+        name: 'execl',
+        component: () => import('@/test/testExecl/index.vue'),
+        meta: { title: '测试execl', keepAlive: false, showTab: true }
       }
     ]
   }

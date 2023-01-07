@@ -1704,6 +1704,55 @@ npm install vue-i18n -S
 - [vue3实现国际化](https://juejin.cn/post/7094916084838432781)
 - [Vue国际化搭配 VSCode i18n Ally插件使用初体验](https://juejin.cn/post/7034344923247837198)
 
+
+
+## 前端execl导入导出
+
+> 1.xlsx
+>
+> `xlsx` 是前端最热门的 `Excel` 导出方案，又叫做 `SheetJS`，默认不支持修改 `Excel` 的样式。
+>
+> 若在工作业务需求上需要修改 `Excel` 的样式的话需要使用该作者的付费版本。或者使用 `xlsx-style`，但使用起来非常麻烦，需要修改 `node_modules` 源码，而且作者最近的提交的版本也在 6 年前，不建议使用。
+>
+> 2.exceljs(推荐)
+>
+> `exceljs` 是一款可导出，可读取的 `Excel` 操作工具，可以实现样式的修改以及 `Excel` 的高级功能，是非常值得推荐的一个处理 `Excel` 的库，并且有[中文文档](https://github.com/exceljs/exceljs/blob/master/README_zh.md)可以查阅。不过，看最近都没人维护了(2023/01/07)
+
+### 1.安装
+
+exceljs 同于写入 Excel，file-sever 用于保存到本地文件
+
+```cmd
+npm install exceljs file-saver
+```
+
+### 2.使用
+
+#### 2.1导入
+
+- 读取到文件流`workbook.xlsx.load(file.raw)`
+- 提前工作表 `result.getWorksheet(1)`
+- 遍历组合得到想要的数据
+
+
+
+- [ExcelJS 在前端浏览器中读取 Excel 文件内容](https://github.com/Dream4ever/Knowledge-Base/issues/142#top)
+- [ExcelJS 前端的excel导入导出](https://www.jianshu.com/p/fc96e22c4df1)
+
+#### 2.2导出
+
+TODO 
+
+- [前端复杂表格一键导出看这篇就够了（附源码）](https://zhuanlan.zhihu.com/p/526658433)
+
+### 3.参考
+
+[这一定是前端导出Excel界的天花板！](https://mdnice.com/writing/87320eb3b53a4f83adcf6b53b416782e)
+
+
+
+
+
 ## vite插件
 
 ### 压缩文件工具
@@ -1786,10 +1835,69 @@ import zipPack from 'vite-plugin-zip-pack'
 
   ​    https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/CHANGELOG.md#140-2022-03-06
 
-## 一些问题
+## ❎一些问题❌
 
 ```
 https://github.com/vitejs/vite/discussions/7574
 使用vue-devtools 并调用了const { appContext } = getCurrentInstance()
+```
+
+
+
+git commit校验失败后，把修改的文件给删除了
+
+```
+$ git commit -m '添加execljs插件实现前端导入execl(TODO execl导出)'
+[STARTED] Preparing lint-staged...
+[SUCCESS] Preparing lint-staged...
+[STARTED] Running tasks for staged files...
+[STARTED] .lintstagedrc.json — 8 files
+[STARTED] **/*.{js,ts,tsx,jsx,vue,scss,css} — 5 files
+[STARTED] prettier --write "src/**/*.ts" "src/**/*.vue"
+[SUCCESS] prettier --write "src/**/*.ts" "src/**/*.vue"
+[STARTED] eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix
+[FAILED] eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix [FAILED]
+[FAILED] eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix [FAILED]
+[SUCCESS] Running tasks for staged files...
+[STARTED] Applying modifications from tasks...
+[SKIPPED] Skipped because of errors from tasks.
+[STARTED] Reverting to original state because of errors...
+[FAILED] <stdin>:46: trailing whitespace.
+[FAILED] TODO
+[FAILED] warning: 1 line adds whitespace errors.
+[FAILED] Unstaged changes after reset:
+[FAILED] M      components.d.ts
+[FAILED] error: Your local changes to the following files would be overwritten by merge:
+[FAILED]        components.d.ts
+[FAILED] Please commit your changes or stash them before you merge.
+[FAILED] Aborting
+[FAILED] Index was not unstashed.
+[STARTED] Cleaning up temporary files...
+[SKIPPED]
+[SKIPPED]   × lint-staged failed due to a git error.
+
+  × lint-staged failed due to a git error.
+  Any lost modifications can be restored from a git stash:
+
+    > git stash list
+    stash@{0}: automatic lint-staged backup
+    > git stash apply --index stash@{0}
+
+
+× eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix:
+
+E:\code\myProject\vue3-vite-demo\src\plugin\execl\index.js
+   62:18  error  'datenum' is not defined            no-undef
+  109:3   error  'setCoverBorder' is not defined     no-undef
+  180:20  error  'getColumnMaxWidth' is not defined  no-undef
+  187:3   error  'saveExcel' is not defined          no-undef
+
+E:\code\myProject\vue3-vite-demo\src\test\testEcharts\index.vue
+  9:24  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+✖ 5 problems (4 errors, 1 warning)
+
+husky - pre-commit hook exited with code 1 (error)
+
 ```
 
