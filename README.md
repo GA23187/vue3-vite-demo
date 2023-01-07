@@ -1518,7 +1518,191 @@ npm install @vueup/vue-quill@latest --save
   editorRef.value.getContents()
   ```
 
+
+
+
+## 国际化i18n
+
+### 1.安装
+
+```
+npm install vue-i18n -S
+```
+
+### 2.注册
+
+- 创建`locales`文件夹，用于维护多语言,下面创建`lang`文件夹存放对应语言文件
+
+  ```
+  ├─.vscode
+  ├─public
+  └─src
+      ├─assets
+      ├─components
+      └─locales //新建 
+      ├─   └─lang
+      ├─      ├─en.ts
+      ├─      └─zh-CN.ts
+      ├─ index.ts  
+  ```
+
+  ```
+  // zh.ts
+  export default {
+    login: '登录',
+    userName: '用户名',
+    password: '密码'
+  }
+  ```
+
+  ```
+  // en.ts
+  export default {
+    login: 'login',
+    userName: 'userName',
+    password: 'password'
+  }
+  ```
+
+  ```
+  // index.ts
+  // index.ts
+  import { createI18n } from 'vue-i18n'
+  import zh from './lang/zh'
+  import en from './lang/en'
   
+  const messages = {
+    en,
+    zh
+  }
+  const language = (navigator.language || 'en').toLocaleLowerCase() // 这是获取浏览器的语言
+  const i18n = createI18n({
+    locale: localStorage.getItem('lang') || language.split('-')[0] || 'en', // 首先从缓存里拿，没有的话就用浏览器语言，
+    fallbackLocale: 'en', // 设置备用语言
+    messages
+  })
+  
+  export default i18n
+  ```
+
+- 最后在`main.ts`中引入使用
+
+  ```
+  import i18n from './locales'
+  //...
+  app.use(i18n)
+  ```
+
+### 3.使用
+
+- 在`<template>`中
+
+  要用到一个`$t()`的方法，或者使用`v-t`也行
+
+  ```vue
+  <div>
+      {{`$t('login.userName')`}}
+  </div>
+  <div v-t="'login.password'"></div>
+  复制代码
+  ```
+
+  关于`$t()`还有很多用法，可以动态传参等，具体参考官网](https://vue-i18n.intlify.dev/guide/advanced/composition.html)
+
+- 在`<setup>`中
+
+  ```
+  <script setup lang="ts">
+  import { useI18n } from 'vue-i18n'
+  
+  const { t } = useI18n()
+  
+  console.log(t('login.useName'))
+  </script>
+  ```
+
+  > 这里可以配置自动引入 可以减少`import { useI18n } from 'vue-i18n'`
+
+- 在`普通ts文件`中
+
+  引入自己创建的 i18n 对象即可。
+
+  ```
+  import i18n from '@/locales'
+  const { locale, t } = i18n.global
+  ```
+
+- 切换语言
+
+  `vue-i18n`提供了一个全局变量`locale`，直接修改即可
+
+  ```
+  <template>
+  	<div class="menu">
+      	<div class="menu-item" @click="changeLang('en')">English</div>
+      	<div class="menu-item" @click="changeLang('zh')">中文</div>
+      </div>
+  </template>
+  <script setup lang="ts">
+  import { useI18n } from 'vue-i18n'
+  const { locale } = useI18n()
+  
+  const changeLang = (lang: string) => {
+    locale.value = lang
+    localStorage.setItem('lang', lang)
+  }
+  </script>
+  ```
+
+### 4.VSCode i18n Ally插件
+
+> 方便翻译
+
+- 安装完成后，会在目录下生成`.vscode/settings.json`文件(如果没有这个文件的话)，并自动添加其配置
+
+  ```json
+    "i18n-ally.localesPaths": ["src/locales", "src/locales/lang"]
+  ```
+
+  其他配置可参考[文档](https://github.com/lokalise/i18n-ally/wiki/Configurations)
+  
+- 重启vscode,在右侧会出现i18n Ally的图标
+
+- 发现没有翻译，打开vscode终端面板，切到i18n Ally发现出现如下错误
+
+  ```
+  🐛 ERROR: Error: connect ECONNREFUSED 127.0.0.1:7890
+  Error: connect ECONNREFUSED 127.0.0.1:7890
+  	at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1157:16)
+  [object Object]
+  ```
+
+  和本机使用的Clash代理端口冲突了。
+
+### 5.问题
+
+1. `Uncaught SyntaxError: Not available in legacy mode`
+
+   ```
+   legacy:false
+   ```
+
+   https://blog.csdn.net/sinat_36728518/article/details/123661673
+
+2. `You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with        boolean literals to get proper tree-shaking in the final bundle.`
+
+   ```
+    alias: {
+       'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
+     },
+   ```
+
+   https://segmentfault.com/a/1190000042062141
+
+### 参考
+
+- [vue3实现国际化](https://juejin.cn/post/7094916084838432781)
+- [Vue国际化搭配 VSCode i18n Ally插件使用初体验](https://juejin.cn/post/7034344923247837198)
 
 ## vite插件
 

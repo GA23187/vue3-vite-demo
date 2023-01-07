@@ -61,7 +61,7 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
           // })
         ],
         // 自动导入 Vue vue-router pinia相关函数，如：ref, reactive, toRef 等
-        imports: ['vue', 'vue-router', 'pinia'],
+        imports: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
         // 生成上面自动导入的api对应的eslint globals文件
         eslintrc: {
           enabled: true,
@@ -87,7 +87,8 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
     ],
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src')
+        '@': resolve(__dirname, 'src'),
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
       }
     },
     css: {
