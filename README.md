@@ -1541,13 +1541,15 @@ npm install vue-i18n -S
       ├─components
       └─locales //新建 
       ├─   └─lang
-      ├─      ├─en.ts
-      ├─      └─zh-CN.ts
+      ├─   	└─ 	en
+      ├─      	├─index.ts
+      ├─   	└─ 	zh
+      ├─      	├─index.ts
       ├─ index.ts  
   ```
 
   ```
-  // zh.ts
+  // zh/index.ts
   export default {
     login: '登录',
     userName: '用户名',
@@ -1556,7 +1558,7 @@ npm install vue-i18n -S
   ```
 
   ```
-  // en.ts
+  // en/index.ts
   export default {
     login: 'login',
     userName: 'userName',
@@ -1565,16 +1567,22 @@ npm install vue-i18n -S
   ```
 
   ```
-  // index.ts
-  // index.ts
-  import { createI18n } from 'vue-i18n'
-  import zh from './lang/zh'
-  import en from './lang/en'
+  import en from './en'
+  import zh from './zh'
   
-  const messages = {
+  export default {
     en,
     zh
   }
+  ```
+
+  
+
+  ```
+  // index.ts
+  import { createI18n } from 'vue-i18n'
+  import messages from './lang'
+  
   const language = (navigator.language || 'en').toLocaleLowerCase() // 这是获取浏览器的语言
   const i18n = createI18n({
     locale: localStorage.getItem('lang') || language.split('-')[0] || 'en', // 首先从缓存里拿，没有的话就用浏览器语言，
@@ -1661,9 +1669,14 @@ npm install vue-i18n -S
 - 安装完成后，会在目录下生成`.vscode/settings.json`文件(如果没有这个文件的话)，并自动添加其配置
 
   ```json
-    "i18n-ally.localesPaths": ["src/locales", "src/locales/lang"]
+    "i18n-ally.localesPaths": ["src/locales/lang"]
+    "i18n-ally.keystyle": "nested",
+  "i18n-ally.enabledParsers": ["ts", "json"],
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.displayLanguage": "zh",
+    "i18n-ally.enabledFrameworks": ["vue", "react"]
   ```
-
+  
   其他配置可参考[文档](https://github.com/lokalise/i18n-ally/wiki/Configurations)
   
 - 重启vscode,在右侧会出现i18n Ally的图标
