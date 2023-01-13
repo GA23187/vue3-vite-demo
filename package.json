@@ -15,6 +15,7 @@
   "dependencies": {
     "@vueup/vue-quill": "^1.0.0",
     "@ztree/ztree_v3": "^3.5.48",
+    "axios": "^0.26.0",
     "echarts": "^5.4.0",
     "element-plus": "^2.2.21",
     "exceljs": "^4.3.0",

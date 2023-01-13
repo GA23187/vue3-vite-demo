@@ -1259,9 +1259,19 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
 }
 ```
 
-## axios 配置
+## ✅ axios 配置
 
+### 1.安装
 
+```
+npm i axios
+```
+
+### 2.基本封装
+
+### 3.TODO
+
+自动重试 取消请求 取消重复请求
 
 
 
@@ -1764,7 +1774,102 @@ TODO
 
 
 
+## vite集成https
 
+目前由于vite版本是2，所以可以直接通过在启动时添加`--https`，以下操作是vite2以上环境下进行的。
+
+> A valid certificate is needed when using `https`. In Vite v2, if no certificate was configured, a self-signed certificate was automatically created and cached. Since Vite v3, we recommend manually creating your certificates. If you still want to use the automatic generation from v2, this feature can be enabled back by adding [@vitejs/plugin-basic-ssl](https://github.com/vitejs/vite-plugin-basic-ssl) to the project plugins.
+>
+> 详情可见 https://v3.vitejs.dev/guide/migration.html#automatic-https-certificate-generation
+
+直接修改启动命令为`"dev": "vite --mode development --https"`，启动后会是https开头的地址，但是打开页面后会提示：
+
+```
+127.0.0.1 使用了不受支持的协议。
+ERR_SSL_VERSION_OR_CIPHER_MISMATCH
+```
+
+###  方式一
+
+#### 生成证书
+
+- 使用mkcert 进行配置证书
+
+  ```bash
+  npm i mkcert -g
+  ```
+
+- 生成ca证书
+
+  ```bash
+  cd [project_folder] # 进入项目
+  mkdir keys  # 新建文件夹存储证书相关
+  cd keys
+  mkcert create-ca [options] # options 参考npm 文档，可以直接使用默认值
+  ```
+
+- 根据ca证书生成cert证书
+
+  详情见https://github.com/FiloSottile/mkcert
+
+  ```bash
+  # 如下设置domains
+  mkcert create-cert --domains 127.0.0.1,localhost
+  ```
+
+- 安装证书
+
+  双击ca.crt，在弹出的对话框中点击“安装证书，在弹出框中，选择“本地计算机”，点击"下一步"，在弹出框中，选择“将所有证书都放入下列存储（P）”，选择“浏览”；在弹出框中选择“受信任的根证书颁发机构”，点击“确定”。点击“下一步”。
+
+  在随后的弹窗中点击确定，会提示“导入成功”，最后点击“确定”，再点击“确定”就可以了。
+
+#### 使用证书
+
+- 修改vite配置
+
+  ```ts
+  import path from 'path'
+  import * as fs from 'fs'
+  
+  export default defineConfig({
+    server: {
+      https: {
+        cert: fs.readFileSync(path.join(__dirname, 'keys/cert.crt')),
+        key: fs.readFileSync(path.join(__dirname, 'keys/cert.key')),
+      },
+    },
+  })
+  ```
+
+然后就可以了。
+
+#### 参考
+
+- [Vue本地开发集成https](https://zhuanlan.zhihu.com/p/591217700) 还有vue2的
+
+### 方式二使用plugin-basic-ssl 插件
+
+#### 安装
+
+```
+npm i -D @vitejs/plugin-basic-ssl
+```
+
+#### 使用
+
+```
+import basicSsl from '@vitejs/plugin-basic-ssl'
+
+export default {
+ plugins: [basicSsl()]
+}
+```
+
+然后就可以了，不用修改其他的东西，但是第一次还是会有提示风险，方式一就没事。
+
+#### 参考
+
+https://github.com/vitejs/vite/issues/9311
 
 ## vite插件
 

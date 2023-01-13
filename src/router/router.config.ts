@@ -85,6 +85,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'execl',
         component: () => import('@/test/testExecl/index.vue'),
         meta: { title: '测试execl', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/axios',
+        name: 'axios',
+        component: () => import('@/test/testAxios/index.vue'),
+        meta: { title: '测试axios', keepAlive: false, showTab: true }
       }
     ]
   }
