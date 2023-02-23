@@ -1,4 +1,5 @@
-import { defineConfig, UserConfigExport, ConfigEnv } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+import type { UserConfigExport, ConfigEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 // jsx支持
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -30,6 +31,8 @@ function handleOutDirByMode(mode) {
 // https://vitejs.dev/config/
 export default ({ mode, command }: ConfigEnv): UserConfigExport => {
   const isBuild = command === 'build'
+  const env = loadEnv(mode, process.cwd())
+  console.log(env, 'env')
   return defineConfig({
     plugins: [
       vue(),

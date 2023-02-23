@@ -87,7 +87,15 @@ VITE_OUTPUT_DIR = 'test'
 console.log(import.meta.env)
 ```
 
-4. typescript 智能提示
+4. 在`vite.config.ts`中访问
+
+```ts
+ import { defineConfig, loadEnv } from 'vite'
+
+ const env = loadEnv(mode, process.cwd())
+```
+
+5. typescript 智能提示
 
 - 修改 `src/env.d.ts` 文件，如果没有创建一个
 
