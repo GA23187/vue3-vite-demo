@@ -1226,7 +1226,7 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
 
 
 
-## 打包配置
+## ⬜打包配置
 
 ```ts
 function handleOutDirByMode(mode) {
@@ -1283,7 +1283,7 @@ npm i axios
 
 
 
-## zTree 使用
+## ⬜zTree 使用
 
 > 需求场景：需要支持树节点的前端搜索，同时搜出来的节点数可能会比较多，使用 element-plus 的 tree 组件会出现明显的卡顿问题。
 
@@ -1344,7 +1344,7 @@ npm i axios
 
 
 
-## echarts使用
+## ⬜ echarts使用
 
 ### 1.安装
 
@@ -1489,7 +1489,7 @@ https://juejin.cn/post/6994606112775340039
 
 
 
-## 富文本编辑器
+## ⬜富文本编辑器
 
 > 选型
 >
@@ -1539,7 +1539,7 @@ npm install @vueup/vue-quill@latest --save
 
 
 
-## 国际化i18n
+## ✅国际化i18n
 
 ### 1.安装
 
@@ -1737,7 +1737,7 @@ npm install vue-i18n -S
 
 
 
-## 前端execl导入导出
+## ⬜前端execl导入导出
 
 > 1.xlsx
 >
@@ -1780,9 +1780,135 @@ TODO
 
 [这一定是前端导出Excel界的天花板！](https://mdnice.com/writing/87320eb3b53a4f83adcf6b53b416782e)
 
+## ⬜前端打印
 
+> 字体大小调整问题
 
-## vite集成https
+## ✅前端预览PDF
+
+```bash
+npm install vue-pdf-embed // 负责pdf预览
+npm install vue3-pdfjs // 获取pdf总页数 
+```
+
+> 之所以不直接使用`vue3-pdfjs`这个库来预览是原因有看其已有又一段时间未更新了，并且在issue区发现其预览一些svg，发票会缺失依赖报错。
+
+```vue
+<template>
+  <div class="pdf-preview">
+    <div class="pdf-wrap">
+      <vue-pdf-embed
+        :source="state.source"
+        :style="scale"
+        class="vue-pdf-embed"
+        :page="state.pageNum"
+      />
+    </div>
+    <div class="page-tool">
+      <div class="page-tool-item" @click="lastPage">上一页</div>
+      <div class="page-tool-item" @click="nextPage">下一页</div>
+      <div class="page-tool-item">{{ state.pageNum }}/{{ state.totalPage }}</div>
+      <div class="page-tool-item" @click="pageZoomOut">放大</div>
+      <div class="page-tool-item" @click="pageZoomIn">缩小</div>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import VuePdfEmbed from 'vue-pdf-embed'
+import { createLoadingTask } from 'vue3-pdfjs/esm' // 获得总页数
+
+const props = defineProps({
+  pdfUrl: {
+    type: String,
+    required: true
+  }
+})
+
+const state = reactive({
+  source: props.pdfUrl,
+  pageNum: 1,
+  scale: 1, // 缩放比例
+  totalPage: 0 // 总页数
+})
+
+onMounted(() => {
+  const loadingTask = createLoadingTask(state.source)
+  loadingTask.promise.then((pdf: { numPages: number }) => {
+    state.totalPage = pdf.numPages
+  })
+})
+
+const scale = computed(() => `transform:scale(${state.scale})`)
+function lastPage() {
+  if (state.pageNum > 1) {
+    state.pageNum -= 1
+  }
+}
+function nextPage() {
+  if (state.pageNum < state.totalPage) {
+    state.pageNum += 1
+  }
+}
+function pageZoomOut() {
+  if (state.scale < 2) {
+    state.scale += 0.1
+  }
+}
+function pageZoomIn() {
+  if (state.scale > 1) {
+    state.scale -= 0.1
+  }
+}
+</script>
+<style lang="scss" scoped>
+.pdf-preview {
+  position: relative;
+  height: 100vh;
+  padding: 20px 0;
+  box-sizing: border-box;
+  background-color: #e9e9e9;
+  .pdf-wrap {
+    overflow-y: auto;
+    .vue-pdf-embed {
+      text-align: center;
+      width: 515px;
+      border: 1px solid #e5e5e5;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+  }
+  .page-tool {
+    position: absolute;
+    bottom: 35px;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    align-items: center;
+    background: rgb(66, 66, 66);
+    color: white;
+    border-radius: 19px;
+    z-index: 100;
+    cursor: pointer;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    .page-tool-item {
+      padding: 8px 15px;
+      padding-left: 10px;
+      cursor: pointer;
+    }
+  }
+}
+</style>
+
+```
+
+### 参考
+
+- [Vue3 实现 PDF 文件在线预览功能](https://juejin.cn/post/7105933034771185701)
+- [vue3+vite在线预览pdf](https://www.cnblogs.com/fsh-1998/p/16772331.html)
+- [Vue3 实现 PDF 文件在线预览功能](https://blog.csdn.net/duanhy_love/article/details/124662550)
+
+## ✅vite集成https
 
 目前由于vite版本是2，所以可以直接通过在启动时添加`--https`，以下操作是vite2以上环境下进行的。
 
@@ -1879,7 +2005,7 @@ export default {
 
 https://github.com/vitejs/vite/issues/9311
 
-## vite插件
+## 🔁vite插件
 
 ### 压缩文件工具
 
@@ -1963,14 +2089,20 @@ import zipPack from 'vite-plugin-zip-pack'
 
 ## ❎一些问题❌
 
+- 问题1
+
 ```
+[Vue warn]: The `compilerOptions` config option is only respected when using a build of Vue.js that includes the runtime compiler (aka "full build"). Since you are using the runtime-only build, `compilerOptions` must be passed to `@vue/compiler-dom` in the build setup instead.
+- For vue-loader: pass it via vue-loader's `compilerOptions` loader option.
+- For vue-cli: see https://cli.vuejs.org/guide/webpack.html#modifying-options-of-a-loader
+- For vite: pass it via @vitejs/plugin-vue options. See 
+```
+
 https://github.com/vitejs/vite/discussions/7574
-使用vue-devtools 并调用了const { appContext } = getCurrentInstance()
-```
 
+使用vue-devtools 并调用了`const { appContext } = getCurrentInstance()`
 
-
-git commit校验失败后，把修改的文件给删除了
+- 问题2 git commit校验失败后，把修改的文件给删除了
 
 ```
 $ git commit -m '添加execljs插件实现前端导入execl(TODO execl导出)'
@@ -2026,4 +2158,3 @@ E:\code\myProject\vue3-vite-demo\src\test\testEcharts\index.vue
 husky - pre-commit hook exited with code 1 (error)
 
 ```
-

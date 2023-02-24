@@ -91,6 +91,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'axios',
         component: () => import('@/test/testAxios/index.vue'),
         meta: { title: '测试axios', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/pdf',
+        name: 'pdf',
+        component: () => import('@/test/testPdf/index.vue'),
+        meta: { title: '预览pdf', keepAlive: false, showTab: true }
       }
     ]
   }

@@ -17,6 +17,7 @@ console.log(route.meta)
     <router-link to="/editor">测试editor</router-link>
     <router-link to="/execl">测试execl</router-link>
     <router-link to="/axios">测试axios</router-link>
+    <router-link to="/pdf">测试pdf</router-link>
   </div>
   <div class="layout-content">
     <keep-alive v-if="route.meta.keepAlive">
