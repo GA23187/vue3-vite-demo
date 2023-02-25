@@ -1463,9 +1463,15 @@ const option: ECOption = {
 >
 > 1.在网上找现成的
 >
-> 2.自定义编辑geojson.io](https://link.juejin.cn/?target=http%3A%2F%2Fgeojson.io%2F)
+> 2.自定义编辑geojson.io](http://geojson.io/)
 
 没有找到那种全国地区 并且还有城市的
+
+#### 地图数据
+
+- https://github.com/tower1229/echarts-world-map-jeojson
+- https://github.com/AmamiyaCx/echarts-map-resources
+- [安利一个非常好用的 echarts geojson 生成器](https://juejin.cn/post/6844903807319539720)
 
 #### 地图下钻
 
@@ -1473,21 +1479,19 @@ const option: ECOption = {
 
 [学会这招！地图随便下钻](https://juejin.cn/post/7154391888433250312)
 
-https://juejin.cn/post/7085536087078076430
+[vue 使用echarts 实现世界地图、中国地图、以及下钻地图绘制](https://juejin.cn/post/7085536087078076430)
 
-https://juejin.cn/post/7073404324587503630
+[使用echarts自身数据地图下钻至省](https://juejin.cn/post/7073404324587503630)
 
-https://juejin.cn/post/7029132275736395784
+[echarts地图实现点击进入下一级行政区（地图钻取）](https://juejin.cn/post/7029132275736395784)
 
-https://juejin.cn/post/6994606112775340039
+[Echarts-实现一个下钻伪3d地图](https://juejin.cn/post/6994606112775340039)
 
+#### 地图区域高亮/散点图
 
-
-#### 地图区域高亮
-
-- Vue环境下用ECharts绘制中国地图，并实现拖动、缩放与各省份自动轮播高亮显示https://majinjian.blog.csdn.net/article/details/121823421
--  echarts 绘制中国地图后加气泡以及亮点https://github.com/ecomfe/echarts-for-weixin/issues/675
-- echarts地图城市散点图https://blog.csdn.net/weixin_41187842/article/details/81261072
+- [Vue环境下用ECharts绘制中国地图，并实现拖动、缩放与各省份自动轮播高亮显示](https://majinjian.blog.csdn.net/article/details/121823421)
+-  [echarts 绘制中国地图后加气泡以及亮点](https://github.com/ecomfe/echarts-for-weixin/issues/675)
+- [echarts地图城市散点图](https://blog.csdn.net/weixin_41187842/article/details/81261072)
 
 
 

@@ -1,21 +1,42 @@
 <template>
+  <el-radio-group v-model="echartMode">
+    <el-radio label="worldZH" size="large">世界地图1(北美洲位于右侧)</el-radio>
+    <el-radio label="worldEH" size="large">世界地图2(北美洲位于左侧)</el-radio>
+    <el-radio label="china" size="large">中国地图</el-radio>
+    <el-radio label="china-area" size="large">中国区域地图</el-radio>
+  </el-radio-group>
   <div id="main" style="width: 100%; height: 100%"></div>
 </template>
 <script setup lang="ts">
 import { getCurrentInstance, onMounted } from 'vue'
 import worldZH from './json/worldZH.json'
-console.log(worldZH)
+import worldEH from './json/worldEn.json'
+import nameMapZh from './json/country-name-map-zh.json'
+import china from './json/china.json'
+import chinaArea from './json/china-area.json'
 
 const { appContext } = getCurrentInstance()!
-console.log(appContext.config.globalProperties)
+const echarts = appContext.config.globalProperties.$echarts
+const echartMode = ref('worldZH')
+let myChart: any = ''
+
 onMounted(() => {
-  const echarts = appContext.config.globalProperties.$echarts
-  echarts.registerMap('world', worldZH)
-
+  // 注册不同的地图
+  echarts.registerMap('worldZH', worldZH)
+  echarts.registerMap('worldEH', worldEH)
+  echarts.registerMap('china', china)
+  echarts.registerMap('china-area', chinaArea)
   // 基于准备好的dom，初始化echarts实例
-  const myChart = echarts.init(document.getElementById('main'))
-  const mapName = 'world'
-
+  myChart = echarts.init(document.getElementById('main'))
+  initEcharts()
+})
+watch(
+  () => echartMode.value,
+  () => {
+    initEcharts()
+  }
+)
+const initEcharts = () => {
   //自定义城市坐标菜单
   const geoCoordMap = {
     中国: [121.15, 31.89],
@@ -29,7 +50,6 @@ onMounted(() => {
     乳山: [121.52, 36.89],
     金昌: [102.188043, 38.520089]
   }
-
   const convertData = function (data) {
     const res: any = []
     for (let i = 0; i < data.length; i++) {
@@ -45,7 +65,8 @@ onMounted(() => {
     }
     return res
   }
-
+  const mapName = echartMode.value || 'worldZH'
+  const nameMap = nameMapZh
   // 指定图表的配置项和数据
   const option = {
     title: {
@@ -93,6 +114,7 @@ onMounted(() => {
     geo: {
       show: true,
       map: mapName,
+      nameMap: nameMap,
       label: {
         // show: true
       },
@@ -100,8 +122,8 @@ onMounted(() => {
       aspectScale: 0.8, // 比例
       // layoutCenter: ['90%', '78%'], // position位置
       // layoutSize: '80%', // 地图大小，保证了不超过 370x370 的区域
-      center: [2.213749, 46.227638],
-      zoom: 5,
+      // center: [2.213749, 46.227638],
+      zoom: 1,
       itemStyle: {
         areaColor: '#eee', //F6F6F6
         borderColor: '#666'
@@ -147,13 +169,12 @@ onMounted(() => {
       }
     ]
   }
-
   // 使用刚指定的配置项和数据显示图表。
   myChart.setOption(option)
   myChart.on('click', (params) => {
-    // 点击下钻的操作写在这里
+    // 点击下钻的操作 也就是切换map
     console.log(params)
   })
-})
+}
 </script>
 <style scoped lang="scss"></style>
