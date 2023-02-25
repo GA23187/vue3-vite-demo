@@ -1224,7 +1224,9 @@ export default ({ mode, command }: ConfigEnv): UserConfigExport => {
    } 
 ```
 
-
+> 默认所有*可见的*"`@types`"包会在编译过程中被包含进来。 `node_modules/@types`文件夹下以及它们子文件夹下的所有包都是*可见的*，
+>
+> 但是指定了`types`，只有被列出来的包才会被包含进来，所以记得添加一个`"jquery"`，不然zTree那里使用的$会提示不存在。
 
 ## ⬜打包配置
 
@@ -1316,7 +1318,7 @@ npm i axios
   npm install @types/jquery -D
   ```
 
-  并修改`.eslintrc.js`
+  并修改`.eslintrc.js`，让eslint认识
 
   ```
     env: {
@@ -1782,9 +1784,242 @@ TODO
 
 ## ⬜前端打印
 
-> 字体大小调整问题
+> 核心其实就是利用window.print方法，但是这个方法会打印整个页面，所以基本上的实现都是利用一个iframe,把需要打印的元素放到iframe中，然后调用print方法来实现打印特定元素。
+
+### 引入
+
+在`plugin`下引入`print`文件夹添加如下文件
+
+```ts
+// index.ts
+import type { App } from 'vue'
+
+// 打印类属性、方法定义
+class Print {
+  public dom
+  public options
+  constructor(dom, options) {
+    this.options = this.extend(
+      {
+        noPrint: '.no-print'
+      },
+      options
+    )
+    if (typeof dom === 'string') {
+      this.dom = document.querySelector(dom)
+    } else {
+      this.isDOM(dom)
+      this.dom = this.isDOM(dom) ? dom : dom.$el
+    }
+    this.init()
+  }
+  init() {
+    const content = this.getStyle() + this.getHtml()
+    this.writeIframe(content)
+  }
+  extend(obj, obj2) {
+    for (const k in obj2) {
+      obj[k] = obj2[k]
+    }
+    return obj
+  }
+  getStyle() {
+    let str = ''
+    const styles = document.querySelectorAll('style,link')
+    for (let i = 0; i < styles.length; i++) {
+      str += styles[i].outerHTML
+    }
+    str +=
+      '<style>' +
+      (this.options.noPrint ? this.options.noPrint : '.no-print') +
+      '{display:none;}</style>'
+    str += '<style>html,body,div{height: auto!important;font-size:14px}</style>'
+
+    return str
+  }
+  getHtml() {
+    const inputs = document.querySelectorAll('input')
+    const textareas = document.querySelectorAll('textarea')
+    const selects = document.querySelectorAll('select')
+    for (let k = 0; k < inputs.length; k++) {
+      if (inputs[k].type == 'checkbox' || inputs[k].type == 'radio') {
+        if (inputs[k].checked == true) {
+          inputs[k].setAttribute('checked', 'checked')
+        } else {
+          inputs[k].removeAttribute('checked')
+        }
+      } else if (inputs[k].type == 'text') {
+        inputs[k].setAttribute('value', inputs[k].value)
+      } else {
+        inputs[k].setAttribute('value', inputs[k].value)
+      }
+    }
+    for (let k2 = 0; k2 < textareas.length; k2++) {
+      if (textareas[k2].type == 'textarea') {
+        textareas[k2].innerHTML = textareas[k2].value
+      }
+    }
+    for (let k3 = 0; k3 < selects.length; k3++) {
+      if (selects[k3].type == 'select-one') {
+        const child = selects[k3].children
+        for (const i in child) {
+          if (child[i].tagName == 'OPTION') {
+            const option = child[i] as HTMLOptionElement
+            if (option.selected == true) {
+              option.setAttribute('selected', 'selected')
+            } else {
+              option.removeAttribute('selected')
+            }
+          }
+        }
+      } else {
+        // select multiple
+      }
+    }
+    return this.dom.outerHTML
+  }
+  writeIframe(content) {
+    const iframe = document.createElement('iframe')
+    const f = document.body.appendChild(iframe)
+    iframe.id = 'myIframe'
+    //iframe.style = "position:absolute;width:0;height:0;top:-10px;left:-10px;";
+    iframe.setAttribute('style', 'position:absolute;width:0;height:0;top:-10px;left:-10px;')
+    const w = f.contentWindow || f.contentDocument
+    const doc = f.contentDocument || (f.contentWindow && f.contentWindow.document)
+    doc!.open()
+    doc!.write(content)
+    doc!.close()
+    // const _this = this
+    // iframe.onload = function () {
+    //   _this.toPrint(w)
+    //   setTimeout(function () {
+    //     document.body.removeChild(iframe)
+    //   }, 100)
+    // }
+    iframe.onload = () => {
+      this.toPrint(w)
+      setTimeout(function () {
+        document.body.removeChild(iframe)
+      }, 100)
+    }
+  }
+  toPrint(frameWindow) {
+    try {
+      setTimeout(function () {
+        frameWindow.focus()
+        try {
+          if (!frameWindow.document.execCommand('print', false, null)) {
+            frameWindow.print()
+          }
+        } catch (e) {
+          frameWindow.print()
+        }
+        frameWindow.close()
+      }, 10)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+  isDOM(obj) {
+    if (typeof HTMLElement === 'object') {
+      return obj instanceof HTMLElement
+    } else {
+      return (
+        obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
+      )
+    }
+  }
+}
+
+const install = function (app: App<Element>) {
+  app.config.globalProperties.$print = function (dom, options) {
+    return new Print(dom, options)
+  }
+}
+export default install
+
+```
+
+### 注册
+
+在`main.ts`中注册为全局方法
+
+```ts
+import print from '@/plugin/print/index'
+app.use(print)
+```
+
+### 使用
+
+```vue
+<template>
+	<div class="print-table-wrap" ref="printRef">
+        需要打印的内容
+    </div>
+</template>
+<script setup lang="ts">
+const { appContext } = getCurrentInstance()!
+const $print = appContext.config.globalProperties.$print
+const printRef = ref()
+
+const printHandle = () => {
+  $print(printRef.value)
+}
+</script>
+```
+
+### 注意事项
+
+- 打印设置使用的是物理单位，所以尺寸最好不要用像素(`px`)，可以用 `pt` 也可以用 `cm``mm`
+
+- 字体大小设置
+
+> 设置小于12px字体
+>
+> 通过transform: scale(0.5)来实现小于12px的字体，再结合transform-origin: 0 0调整原点位置
+
+- 隐藏元素 `display：none`
+- 浏览器默认情况下并不能打印出 CSS 中的背景内容，只有当浏览器被设置为可以打印背景的情况下才能打印出背景
+- `page-break-after: always` 指定元素分页
+
+- `@media print` 媒体查询
+
+在 CSS 内，使用媒体查询 @media print 将样式只应用到打印上。
+
+```css
+@media print {
+  /* ... */
+}
+```
+
+- 去除页眉页脚
+
+```css
+/* 去除页眉 */
+@page {
+  margin-top: 0;
+}
+/* 去除页脚 */
+@page {
+  margin-bottom: 0;
+}
+/* 页眉和页脚全去掉 */
+@page {
+  margin: 0;
+}
+```
+
+
+
+### 参考
+
+- https://free_pan.gitee.io/freepan-blog/articles/04-%E5%9F%BA%E7%A1%80/css/%E6%89%93%E5%8D%B0%E6%A0%B7%E5%BC%8F%E6%8E%A7%E5%88%B6.html#%E8%B0%83%E8%AF%95%E6%89%93%E5%8D%B0%E6%A0%B7%E5%BC%8F
+
+
 
 ## ✅前端预览PDF
+
+###  安装
 
 ```bash
 npm install vue-pdf-embed // 负责pdf预览
@@ -1792,6 +2027,8 @@ npm install vue3-pdfjs // 获取pdf总页数
 ```
 
 > 之所以不直接使用`vue3-pdfjs`这个库来预览是原因有看其已有又一段时间未更新了，并且在issue区发现其预览一些svg，发票会缺失依赖报错。
+
+### 使用
 
 ```vue
 <template>

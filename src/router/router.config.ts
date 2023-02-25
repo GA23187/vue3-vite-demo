@@ -97,6 +97,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'pdf',
         component: () => import('@/test/testPdf/index.vue'),
         meta: { title: '预览pdf', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/print',
+        name: 'print',
+        component: () => import('@/test/testPrint/index.vue'),
+        meta: { title: '测试print', keepAlive: false, showTab: true }
       }
     ]
   }
