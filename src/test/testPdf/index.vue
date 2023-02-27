@@ -21,14 +21,14 @@ import VuePdfEmbed from 'vue-pdf-embed'
 
 const pdfUrl = ref('http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf')
 const pdfOptions = reactive({
-  source: '/test.pdf',
+  source: '/signed.pdf',
   pageNum: 1,
   numPages: 0, // 总页数
   scale: 1 // 缩放比例
 })
 
 const open = () => {
-  window.open('/test.pdf', '_blank')
+  window.open('/signed.pdf', '_blank')
 }
 </script>
 <style scoped lang="scss">

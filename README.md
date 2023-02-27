@@ -2031,6 +2031,10 @@ npm install vue3-pdfjs // 获取pdf总页数
 ```
 
 > 之所以不直接使用`vue3-pdfjs`这个库来预览是原因有看其已有又一段时间未更新了，并且在issue区发现其预览一些svg，发票会缺失依赖报错。
+>
+> 2023/02/27更新 vue-pdf-embed发票也是文字显示不全，看样子也是字体丢失
+>
+> 原理还是下面的pdfjs来处理的
 
 ### 使用
 
@@ -2140,14 +2144,95 @@ function pageZoomIn() {
   }
 }
 </style>
-
 ```
 
 ### 参考
 
 - [Vue3 实现 PDF 文件在线预览功能](https://juejin.cn/post/7105933034771185701)
 - [vue3+vite在线预览pdf](https://www.cnblogs.com/fsh-1998/p/16772331.html)
-- [Vue3 实现 PDF 文件在线预览功能](https://blog.csdn.net/duanhy_love/article/details/124662550)
+- [vue3.0借用vue-pdf-embed实现在线预览pdf文件](https://blog.csdn.net/duanhy_love/article/details/124662550)
+- [这将是你看到过最全的pdf预览解决方案](https://juejin.cn/post/7117521871221817375)
+
+### pdf.js
+
+#### 使用
+
+下载地址：http://mozilla.github.io/pdf.js/getting_started/#download
+
+把下载好的文件放在public文件夹下，访问就是在后面加上`?file=pdf地址`，需要验证的是说后面是不支持blob流的文件的，需要是pdf格式的。
+
+```
+http://192.168.31.172:8080/viewer.html?file=xxx.pdf
+```
+
+#### 电子印章或发票字体
+
+- 看网友的问题显示不出来印章报错
+
+  ```
+  Warning: Unimplemented widget field type "Sig", falling back to base field type.
+  ```
+
+  可以通过修改pdf.work.js的源码来解决，全局搜索`AnnotationFlag.HIDDEN`：
+
+  ```js
+  if(data.fieldType==='Sig') {
+      warn('unimplemented annotation type: Widget signature');
+      // 注释下面这行代码
+      this.setFlags(AnnotationFlag.HIDDEN);
+   }
+  ```
+
+  但是我在下载pdf.js后，并没有遇到这个报错，可能是版本的问题我的是`v3.4.120`
+
+  我遇到的问题是发票上的文字显示不全，如下图
+
+  ![image-20230227230151500](images/image-20230227230151500.png)
+
+  看控制台出现的错误得知是缺失了字体文件，还有个不支持数字签名的警告。
+
+  ![image-20230227225949649](images/image-20230227225949649.png)
+
+  看网络请求发现是请求的路径有问题`http://192.168.31.172:8080/web/cmaps/UniGB-UCS2-H.bcmap`
+
+  查找下发现是在`viewer.js`中控制的
+
+  ![image-20230227230105899](images/image-20230227230105899.png)
+
+  修改后就正常显示了。
+
+
+#### 跨域问题
+
+> 以下支持临时解决方案，实际生产还是用nginx转发下或找后端处理为流
+
+注释下面的`public/static/pdf/web/viewer.js`代码
+
+```js
+  const viewerOrigin = new URL(window.location.href).origin || 'null'
+  if (HOSTED_VIEWER_ORIGINS.includes(viewerOrigin)) {
+      return
+  }
+  const fileOrigin = new URL(file, window.location.href).origin
+  if (fileOrigin !== viewerOrigin) {
+      // 注释这里
+      throw new Error("file origin does not match viewer's")
+   }
+```
+
+#### 禁止下载
+
+在viewer.html中搜索`download`找到按钮隐藏
+
+#### 添加水印
+
+- [用pdf.js在线预览pdf ](https://www.cnblogs.com/GoTing/p/14475121.html)
+
+### 移动端预览及双指缩放
+
+> 移动端可以用pdf.js，如果没有复制文本的需求就别用document和canvas渲染，转成图片效率和性能更高，结合虚拟列表和懒加载优化目前测试过 1000页pdf完美渲染，兼容安卓4.x
+
+- [VUE3+VITE 移动端H5 借助canvas实现预览PDF以及双指缩放](https://juejin.cn/post/7080770854153355294)
 
 ## ✅vite集成https
 
