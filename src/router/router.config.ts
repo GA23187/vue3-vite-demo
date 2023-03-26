@@ -103,6 +103,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'print',
         component: () => import('@/test/testPrint/index.vue'),
         meta: { title: '测试print', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/waterMark',
+        name: 'waterMark',
+        component: () => import('@/test/testWaterMark/index.vue'),
+        meta: { title: '测试水印', keepAlive: false, showTab: true }
       }
     ]
   }

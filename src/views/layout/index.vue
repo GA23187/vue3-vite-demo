@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import watermark from '@/utils/setWatermark'
 // import { useRoute } from 'vue-router'
 const route = useRoute()
 console.log(route.meta)
+onMounted(() => {
+  watermark.set(['测试水印', 'xxx'])
+  setTimeout(() => {
+    watermark.out()
+  }, 1000)
+})
 </script>
 <template>
   <div class="layout-tabbar">

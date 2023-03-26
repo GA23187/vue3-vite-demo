@@ -1455,7 +1455,7 @@ const option: ECOption = {
 
 ### 3.使用
 
-
+> 封装一个通用的？TODO
 
 ### 世界地图实现
 
@@ -1572,7 +1572,7 @@ npm install vue-i18n -S
       ├─ index.ts  
   ```
 
-  ```
+  ```ts
   // zh/index.ts
   export default {
     login: '登录',
@@ -1581,7 +1581,7 @@ npm install vue-i18n -S
   }
   ```
 
-  ```
+  ```ts
   // en/index.ts
   export default {
     login: 'login',
@@ -1590,7 +1590,7 @@ npm install vue-i18n -S
   }
   ```
 
-  ```
+  ```ts
   import en from './en'
   import zh from './zh'
   
@@ -1600,10 +1600,8 @@ npm install vue-i18n -S
   }
   ```
 
-  
-
-  ```
-  // index.ts
+  ```ts
+// index.ts
   import { createI18n } from 'vue-i18n'
   import messages from './lang'
   
@@ -1616,10 +1614,10 @@ npm install vue-i18n -S
   
   export default i18n
   ```
-
+  
 - 最后在`main.ts`中引入使用
 
-  ```
+  ```ts
   import i18n from './locales'
   //...
   app.use(i18n)
@@ -1636,14 +1634,14 @@ npm install vue-i18n -S
       {{`$t('login.userName')`}}
   </div>
   <div v-t="'login.password'"></div>
-  复制代码
   ```
+  
 
-  关于`$t()`还有很多用法，可以动态传参等，具体参考官网](https://vue-i18n.intlify.dev/guide/advanced/composition.html)
+关于`$t()`还有很多用法，可以动态传参等，具体参考官网](https://vue-i18n.intlify.dev/guide/advanced/composition.html)
 
 - 在`<setup>`中
 
-  ```
+  ```ts
   <script setup lang="ts">
   import { useI18n } from 'vue-i18n'
   
@@ -1659,7 +1657,7 @@ npm install vue-i18n -S
 
   引入自己创建的 i18n 对象即可。
 
-  ```
+  ```ts
   import i18n from '@/locales'
   const { locale, t } = i18n.global
   ```
@@ -1668,7 +1666,7 @@ npm install vue-i18n -S
 
   `vue-i18n`提供了一个全局变量`locale`，直接修改即可
 
-  ```
+  ```ts
   <template>
   	<div class="menu">
       	<div class="menu-item" @click="changeLang('en')">English</div>
@@ -1785,6 +1783,32 @@ TODO
 ### 3.参考
 
 [这一定是前端导出Excel界的天花板！](https://mdnice.com/writing/87320eb3b53a4f83adcf6b53b416782e)
+
+### 其他
+
+数据量比较大时。TODO
+
+> 借助web worker
+>
+> *import* data *from* "./data.json" *assert* { type: "json" };
+
+- https://github.com/exceljs/exceljs/issues/361
+
+- [C V大法：让你用最简单的方式使用Vue2 + Web Worker + js-xlsx 解析excel数据](https://juejin.cn/post/7010046891480055815)
+- https://www.npmjs.com/package/excel-worker
+
+
+
+## ⬜前端水印
+
+> 利用canvas绘制水印信息，利用MutationObserver监听DOM树结构的变化
+
+- https://juejin.cn/post/6947944559452094472
+- [前 / 后端水印功能实现方案](https://juejin.cn/post/7160679124489961502)
+- [图片和PDF文件前端水印实现方案](https://zhuanlan.zhihu.com/p/543649341)
+- [前端操作pdf文件实现添加水印效果](https://blog.csdn.net/xiaolishuibuzhao/article/details/128815202)
+
+
 
 ## ⬜前端打印
 
@@ -2021,7 +2045,7 @@ const printHandle = () => {
 
 
 
-## ✅前端预览PDF
+## ⬜前端预览PDF
 
 ###  安装
 
