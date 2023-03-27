@@ -26,6 +26,7 @@ onMounted(() => {
     <router-link to="/axios">测试axios</router-link>
     <router-link to="/pdf">测试pdf</router-link>
     <router-link to="/print">测试print</router-link>
+    <router-link to="/threejs">测试threejs</router-link>
   </div>
   <div class="layout-content">
     <keep-alive v-if="route.meta.keepAlive">

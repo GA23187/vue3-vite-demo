@@ -109,6 +109,12 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'waterMark',
         component: () => import('@/test/testWaterMark/index.vue'),
         meta: { title: '测试水印', keepAlive: false, showTab: true }
+      },
+      {
+        path: '/threejs',
+        name: 'threejs',
+        component: () => import('@/test/testThreejs/index.vue'),
+        meta: { title: '测试threejs', keepAlive: false, showTab: true }
       }
     ]
   }

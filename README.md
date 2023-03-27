@@ -2258,6 +2258,30 @@ http://192.168.31.172:8080/viewer.html?file=xxx.pdf
 
 - [VUE3+VITE 移动端H5 借助canvas实现预览PDF以及双指缩放](https://juejin.cn/post/7080770854153355294)
 
+
+
+## ⬜Threejs使用
+
+### 1.安装
+
+```
+npm i threejs
+```
+
+### 2.使用
+
+封装一下
+
+- 需要注意的DRACO压缩格式模型的加载需要引入DRACOLoader。
+  - 在`public`文件夹下存放`draco`与`model`
+  - TODO  `draco/gltf`下的中的工具文件与`draco`下的区别
+
+> 使用threejs 150版本加载glb模型的方法报错Error: THREE.DRACOLoader: Unexpected geometry type.
+>
+> 切换到之前学习的版本three@^0.125.1，应该是使用方法变了
+
+
+
 ## ✅vite集成https
 
 目前由于vite版本是2，所以可以直接通过在启动时添加`--https`，以下操作是vite2以上环境下进行的。
